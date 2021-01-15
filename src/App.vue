@@ -1,28 +1,55 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+   <portal-target name="semantic-ui-vue"/>
+    <div class="top menu">
+      <sui-menu tabular pointing>
+        <sui-menu-item v-for="item in menu_items" :key="item.Title"
+        :active="selected==item.Type" @click="selected=item.Type">
+          {{item.Title}}
+        </sui-menu-item>
+      </sui-menu>
+    </div>
+    <component :is="selected">
+    </component>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Table from './components/Table.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Table
+  },
+  data() {
+    return {
+      menu_items:
+       [{
+          Title: "Document List",
+          Type: "Table"
+        },
+        {
+          Title: "My Account",
+          Type: ""
+        }],
+        selected: "Table"
+    }
+  },
+  methods: {
+
   }
 }
 </script>
 
 <style>
+* {
+  margin: 10;
+  padding: 10;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  overflow-x: scroll;
+  width: 100%;
+  height: 100%;
 }
 </style>
