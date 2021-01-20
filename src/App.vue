@@ -1,43 +1,26 @@
 <template>
-  <div id="app">
-   <portal-target name="semantic-ui-vue"/>
-    <div class="top menu">
-      <sui-menu tabular pointing>
-        <sui-menu-item v-for="item in menu_items" :key="item.Title"
-        :active="selected==item.Type" @click="selected=item.Type">
-          {{item.Title}}
-        </sui-menu-item>
-      </sui-menu>
-    </div>
-    <component :is="selected">
-    </component>
+  <div id="app" v-on:mousemove="sideBarCheck">
+    <sidebar v-bind:toggle="Toggled"/>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import Table from './components/Table.vue'
+import Sidebar from './components/Sidebar.vue'
 
 export default {
   name: 'App',
-  components: {
-    Table
-  },
-  data() {
-    return {
-      menu_items:
-       [{
-          Title: "Document List",
-          Type: "Table"
-        },
-        {
-          Title: "My Account",
-          Type: ""
-        }],
-        selected: "Table"
-    }
-  },
+  components: { Sidebar },
+  data() { return { Toggled: false, } },
   methods: {
-
+    sideBarCheck: function(event) {
+      var x = event.clientX;
+      if(x < 200) {
+        this.Toggled = true;
+      }  else {
+        this.Toggled = false;
+      }
+    }
   }
 }
 </script>

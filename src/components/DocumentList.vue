@@ -1,5 +1,6 @@
 <template>
   <div class="data table">
+    <h1><center>Master Document List</center></h1>
     <sui-table celled >
       <!-- Header -->
       <sui-table-header>
@@ -58,7 +59,7 @@
                   'Requester', 'Creation Date', 'Ready Date', 'Checker',
                   'Check Date', 'Approver', 'Approve Date', 'Release Date',
                   'Revision Reason'],
-        Vals: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        Vals: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
       }
     },
     methods: {
