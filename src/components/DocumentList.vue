@@ -1,9 +1,24 @@
 <template>
   <div class="data table">
     <h1><center>Master Document List</center></h1>
-    <sui-table celled >
+    <sui-table selectable celled >
       <!-- Header -->
       <sui-table-header>
+        <sui-table-row>
+          <sui-table-header-cell colspan="14">
+            <sui-menu style="width: 136px;">
+              <a is="sui-menu-item" icon>
+                <sui-icon name="plus" />
+              </a>
+              <a is="sui-menu-item" icon>
+                <sui-icon name="pencil" />
+              </a>
+              <a is="sui-menu-item" icon>
+                <sui-icon name="trash" />
+              </a>
+            </sui-menu>
+          </sui-table-header-cell>
+        </sui-table-row>
         <sui-table-row>
           <sui-table-header-cell v-for="(header, index) in headers" :key="index">
             {{header}}
@@ -30,7 +45,6 @@
       <sui-table-footer>
       <sui-table-row>
         <sui-table-header-cell colspan="14">
-          <center>
           <sui-menu pagination>
             <a is="sui-menu-item" icon>
               <sui-icon name="left chevron" />
@@ -43,7 +57,6 @@
               <sui-icon name="right chevron" />
             </a>
           </sui-menu>
-        </center>
         </sui-table-header-cell>
       </sui-table-row>
     </sui-table-footer>
@@ -61,7 +74,8 @@
                   'Requester', 'Creation Date', 'Ready Date', 'Checker',
                   'Check Date', 'Approver', 'Approve Date', 'Release Date',
                   'Revision Reason'],
-        Vals: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        Vals: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        docs: []
       }
     },
     methods: {
