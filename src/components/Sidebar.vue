@@ -10,13 +10,54 @@
        inverted
        vertical
      >
-       <sui-menu-item to="/"> <sui-icon name="home" /> My Acccount </sui-menu-item>
-       <sui-menu-item to="/">
-         <sui-icon name="file alternate" /> Master List
+       <router-link to="/account">
+         <sui-menu-item to="/">
+           <sui-icon name="home" />
+           My Acccount
+        </sui-menu-item>
+       </router-link>
+       <router-link to="/documents">
+       <sui-menu-item>
+           <sui-icon name="file outline" />
+            Master List
        </sui-menu-item>
-       <sui-menu-item to="">
-         <sui-icon name="file alternate outline" /> MyProject
+       </router-link>
+       <router-link to="/document">
+       <sui-menu-item>
+           <sui-icon name="file outline" />
+            Document Edit
        </sui-menu-item>
+       </router-link>
+       <router-link to="/login">
+       <sui-menu-item>
+           <sui-icon name="file alternate" />
+            Login
+       </sui-menu-item>
+       </router-link>
+       <router-link to="/signup">
+       <sui-menu-item>
+           <sui-icon name="file alternate" />
+            SignUp
+       </sui-menu-item>
+       </router-link>
+       <router-link to="/forgot">
+       <sui-menu-item>
+           <sui-icon name="file alternate" />
+            ForgotPassword
+       </sui-menu-item>
+       </router-link>
+       <router-link to="/reset">
+       <sui-menu-item>
+           <sui-icon name="file alternate" />
+            PasswordReset
+       </sui-menu-item>
+       </router-link>
+       <router-link to="/project/testproj">
+       <sui-menu-item>
+           <sui-icon name="file alternate" />
+            Testproject
+       </sui-menu-item>
+       </router-link>
      </sui-menu>
      <sui-sidebar-pusher>
        <sui-segment>

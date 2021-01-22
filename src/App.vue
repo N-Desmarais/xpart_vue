@@ -1,7 +1,9 @@
 <template>
   <div id="app" v-on:mousemove="sideBarCheck">
     <sidebar v-bind:toggle="Toggled"/>
-    <router-view/>
+    <div id="Router">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -15,9 +17,12 @@ export default {
   methods: {
     sideBarCheck: function(event) {
       var x = event.clientX;
-      if(x < 200) {
+      var y = event.clientY;
+      if(x < 200 && y < 50) {
         this.Toggled = true;
-      }  else {
+      }  else if (x < 200 && this.Toggled){
+        this.Toggled = true;
+      } else {
         this.Toggled = false;
       }
     }

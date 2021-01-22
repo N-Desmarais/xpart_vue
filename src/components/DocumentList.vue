@@ -30,7 +30,8 @@
       <sui-table-footer>
       <sui-table-row>
         <sui-table-header-cell colspan="14">
-          <sui-menu v-sui-floated:right pagination>
+          <center>
+          <sui-menu pagination>
             <a is="sui-menu-item" icon>
               <sui-icon name="left chevron" />
             </a>
@@ -42,6 +43,7 @@
               <sui-icon name="right chevron" />
             </a>
           </sui-menu>
+        </center>
         </sui-table-header-cell>
       </sui-table-row>
     </sui-table-footer>
@@ -59,7 +61,7 @@
                   'Requester', 'Creation Date', 'Ready Date', 'Checker',
                   'Check Date', 'Approver', 'Approve Date', 'Release Date',
                   'Revision Reason'],
-        Vals: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        Vals: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
       }
     },
     methods: {

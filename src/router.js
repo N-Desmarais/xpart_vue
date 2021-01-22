@@ -9,13 +9,17 @@ export default new Router({
       path: "/",
       alias: "/login",
       name: "Login",
-      component: () => import("./components/DocumentList")
-    }
-    /*,
+      component: () => import("./components/Login")
+    },
     {
       path: "/signup",
       name: "Signup",
       component: () => import("./components/SignUp")
+    },
+    {
+      path: "/forgot",
+      name: "ForgotPassword",
+      component: () => import("./components/ForgotPassword")
     },
     {
       path: "/reset",
@@ -23,7 +27,7 @@ export default new Router({
       component: () => import("./components/PasswordReset")
     },
     {
-      path: "/user/:user",
+      path: "/account",
       name: "Account",
       component: () => import("./components/Account")
     },
@@ -36,6 +40,10 @@ export default new Router({
       path: "/documents",
       name: "Documents",
       component: () => import("./components/DocumentList")
-    }
-  */]
+    },
+    {
+      path: "/document",
+      name: "DocumentEdit",
+      component: () => import("./components/Document")
+    }]
 });
