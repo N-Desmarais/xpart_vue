@@ -1,8 +1,12 @@
 import http from "../axios";
 
 class DocumentDataService {
-  getAll(query) {
-    if(query) {
+  getMaxPart() {
+    return http.get("/documents/maxpartnum")
+  }
+
+  getAll(query = null) {
+    if(query != null) {
       return http.get("/documents" + query);
     } else
       return http.get("/documents");
@@ -29,7 +33,7 @@ class DocumentDataService {
   }
 
   findByProject(project) {
-    return http.get(`/documents?title=${title}`);
+    return http.get(`/documents?project=${project}`);
   }
 }
 
