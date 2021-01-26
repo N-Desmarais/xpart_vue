@@ -42,8 +42,14 @@ export default new Router({
       component: () => import("./components/DocumentList")
     },
     {
-      path: "/document",
+      path: "/document_edit",
       name: "DocumentEdit",
-      component: () => import("./components/Document")
+      component: () => import("./components/DocumentEdit"),
+      props: true
+    },
+    {
+      path: "/document_create",
+      name: "DocumentCreate",
+      component: () => import("./components/DocumentCreate")
     }]
 });

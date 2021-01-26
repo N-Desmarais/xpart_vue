@@ -16,6 +16,10 @@ class DocumentDataService {
     return http.get(`/documents/${id}`);
   }
 
+  getClasses() {
+    return http.get(`/documents/classes`);
+  }
+
   create(data) {
     return http.post("/documents", data);
   }

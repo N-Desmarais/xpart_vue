@@ -8,11 +8,11 @@
 </template>
 
 <script>
-import Sidebar from './components/Sidebar.vue'
+import sidebar from './components/Sidebar.vue'
 
 export default {
   name: 'App',
-  components: { Sidebar },
+  components: { sidebar },
   data() { return { Toggled: false, } },
   methods: {
     sideBarCheck: function(event) {

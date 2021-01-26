@@ -22,7 +22,7 @@
             Master List
        </sui-menu-item>
        </router-link>
-       <router-link to="/document">
+       <router-link to="/document_edit">
        <sui-menu-item>
            <sui-icon name="file outline" />
             Document Edit
@@ -72,7 +72,7 @@
 <script>
 
 export default {
-  name: 'Sidebar',
+  name: 'sidebar',
   data() { return {} },
   props: ['toggle'],
 }

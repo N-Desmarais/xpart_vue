@@ -1,7 +1,7 @@
 import http from "../axios";
 
 class UserDataService {
-  getAll(query) {
+  getAll() {
     return http.get("/users");
   }
 

@@ -1,7 +1,7 @@
 import http from "../axios";
 
 class ProjectDataService {
-  getAll(query) {
+  getAll() {
     return http.get("/projects");
   }
 
