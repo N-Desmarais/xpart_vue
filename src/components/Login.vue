@@ -1,8 +1,8 @@
 <template>
   <div id="Login">
     <sui-container centered>
-      <sui-grid middle aligned padded="true" id="Grid">
-        <sui-grid-column centered="true" style="width: 500px;">
+      <sui-grid middle aligned :padded="true" id="Grid">
+        <sui-grid-column :centered="true" style="width: 500px;">
           <sui-segment style="background: #F8F8F9;">
           <center>
           <div id="Title">XPart Login<br></div>
@@ -18,7 +18,7 @@
               <input placeholder="Password" type="password"/>
             </sui-form-field>
             <center>
-            <sui-button basic="true" color="blue" content="Login"/><br>
+            <sui-button :basic="true" color="blue" content="Login"/><br>
           </center>
           <a style="text-align: left;">Forgot Password</a>
           <span style="float:right;">

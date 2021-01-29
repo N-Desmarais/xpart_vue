@@ -16,7 +16,7 @@
 							<a is="sui-menu-item" icon @click="editDoc(selectedRow)">
 								<sui-icon name="pencil" />
 							</a>
-							<a is="sui-menu-item" icon>
+							<a is="sui-menu-item" icon @click="deleteDoc(selectedRow)">
 								<sui-icon name="trash" />
 							</a>
 						</sui-menu>
@@ -112,6 +112,13 @@ export default {
 			DocumentDataService.getAll()
 				.then(response => {
 					this.docs = response.data;
+					this.docs.sort(
+						function(a, b) {
+							if(a.part_num == b.part_num) {
+								return a.revision - b.revision
+							}
+							return a.part_num > b.part_num ? 1 : -1;
+						});
 					this.getDocInfo(response.data);
 				})
 				.catch(e => {
@@ -147,7 +154,21 @@ export default {
     },
     editDoc(index) {
       if(index != null)
-      this.$router.push({name: 'DocumentEdit', params: {DocInfo: this.docs[index]}})
+      this.$router.push({name: 'DocumentEdit', params: {DocID: this.docs[index].doc_id, PartNum: this.docs[index].part_num}})
+    },
+		deleteDoc(index) {
+      if(index != null) {
+			DocumentDataService.delete(this.docs[index].doc_id)
+				.then(response => {
+					if(response.status == 200) {
+						this.docs.splice(index, 1);
+						this.docsInfo.splice(index, 1);
+					}
+				})
+				.catch(e => {
+					console.error(e);
+				});
+			}
     }
 	},
 	mounted() {

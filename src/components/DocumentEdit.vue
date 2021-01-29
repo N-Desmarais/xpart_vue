@@ -39,11 +39,11 @@
 							<sui-form-fields>
 								<sui-form-field>
 									<label>Revision *</label>
-									<input
-										disabled
-										v-model="data.Revision"
-										style="width: 195px;"
-										@change="CheckRequired"
+									<sui-dropdown
+										selection
+										:options="revisions"
+										v-model="selectedDoc"
+										@input="swapData(selectedDoc)"
 									/>
 								</sui-form-field>
 								<sui-form-fields grouped style="margin: 0em .5em 0em">
@@ -149,6 +149,7 @@
 									color="blue"
 									content="New Rev"
 									style="margin: 0em .5em 0em"
+									@click="newRevision"
 								/>
 								<router-link to="/documents">
 									<sui-button
@@ -173,32 +174,35 @@ import ProjectDataService from "../services/project.service";
 
 export default {
 	name: "DocumentCreate",
-	props: ["DocInfo"],
+	props: ["DocID", 'PartNum'],
 	data() {
 		return {
 			radio_value: "1",
-			eng_rev: this.engineering_rev,
-			prod_rev: this.production_rev,
+			eng_rev: null,
+			prod_rev: null,
 			nextPart: null,
 			users: [],
 			classes: [],
 			projects: [],
-			id: this.DocInfo.doc_id,
+			revisions: [],
+			selectedDoc: null,
+			id: null,
 			data: {
-				Project: this.DocInfo.Project.project_id,
-				Doc_Class: this.DocInfo.Document_Class.class_id,
-				Revision: this.DocInfo.revision,
-				Part_Num: this.DocInfo.part_num,
-				Requestor: this.DocInfo.Requestor.user_id,
-				Creation_Date: this.DocInfo.creation_date,
-				Ready_Date: this.DocInfo.ready_date,
+				Project: null,
+				Doc_Class: null,
+				Part_Num: null,
+				Revision: null,
+				Description: null,
+				Requestor: null,
+				Creation_Date: null,
+				Ready_Date: null,
 				Checker: null,
-				Checked_Date: this.DocInfo.checked_date,
+				Checked_Date: null,
 				Approver: null,
-				Approved_Date: this.DocInfo.approved_date,
-				Released_Date: this.DocInfo.released_date,
-				Description: this.DocInfo.description,
-				Revision_Reason: this.DocInfo.revision_reason
+				Approved_Date: null,
+				Released_Date: null,
+				Revision_Reason: null,
+				Doc_ID: null
 			},
 			submittable: false
 		};
@@ -246,6 +250,51 @@ export default {
 					console.error(e);
 				});
 		},
+		retrieveDocuments() {
+			var query = `?part_num=${this.PartNum}`
+			DocumentDataService.getAll(query)
+				.then(response => {
+					this.collectInfo(response.data);
+				})
+				.catch(e => {
+					console.error(e);
+				});
+		},
+		collectInfo(data) {
+			var index = 0;
+			for (const doc of data) {
+				var ob = {
+					Project: doc.Project.project_id,
+					Doc_Class: doc.Document_Class.class_id,
+					Part_Num: doc.part_num,
+					Revision: doc.revision,
+					Description: doc.description,
+					Requestor: null,
+					Creation_Date: doc.creation_date,
+					Ready_Date: doc.ready_date,
+					Checker: null,
+					Checked_Date: doc.checked_date,
+					Approver: null,
+					Approved_Date: doc.approved_date,
+					Released_Date: doc.released_date,
+					Revision_Reason: doc.revision_reason,
+					Doc_ID: doc.doc_id
+				};
+				if (doc.Checker) ob['Checker'] = doc.Checker.user_id;
+				if (doc.Approver) ob['Approver'] = doc.Approver.user_id;
+				if (doc.Requestor) ob['Requestor'] = doc.Requestor.user_id;
+				this.revisions.push({
+					text: `${ob['Revision']}`,
+					value: index,
+					data: ob
+				});
+				if(ob.Doc_ID == this.DocID) {
+					this.selectedDoc = index;
+					this.swapData(index);
+				}
+				index++;
+			}
+		},
 		updateRevision() {
 			if (this.radio_value == 1 && this.eng_rev == null) this.data.Revision = "A";
 			else if (this.radio_value == 1) this.data.Revision = this.eng_rev;
@@ -254,7 +303,7 @@ export default {
 			else this.data.Revision = this.prod_rev;
 		},
 		editDoc() {
-			DocumentDataService.update(this.id, this.data)
+			DocumentDataService.update(this.data.Doc_ID, this.data)
 				.then(response => {
 					if (response.status == 200) this.$router.push({ name: "Documents" });
 				})
@@ -277,11 +326,29 @@ export default {
 				this.submittable = true;
 			else this.submittable = false;
 		},
-		importUsers() {
-			if (this.DocInfo.Checker)
-				this.data["Checker"] = this.DocInfo.Checker.user_id;
-			if (this.DocInfo.Approver)
-				this.data["Approver"] = this.DocInfo.Approver.user_id;
+		swapData(index) {
+			for(const [key, value] of Object.entries(this.revisions[index].data)) {
+				this.data[key] = value;
+			}
+		},
+		getLatestRevs() {
+			//var eng_rev;
+			//var prod_rev;
+			var arr = [];
+
+			for(const value of Object.values(this.revisions)) {
+				var a = value.data.Revision;
+				arr.push(a);
+			}
+			// Assuming that highest numerical rev is 1 index before 'A' & that
+			// the highest alphabetical rev is the last index after sort
+
+			arr.sort();
+			console.log(arr);
+
+		},
+		newRevision() {
+			this.getLatestRevs();
 		}
 	},
 	mounted() {
@@ -289,7 +356,7 @@ export default {
 			this.retrieveUsers();
 			this.retrieveClasses();
 			this.retrieveProjects();
-			this.importUsers();
+			this.retrieveDocuments();
 		} catch (err) {
 			console.error("Error response:");
 			console.error(err);

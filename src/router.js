@@ -50,6 +50,7 @@ export default new Router({
     {
       path: "/document_create",
       name: "DocumentCreate",
-      component: () => import("./components/DocumentCreate")
+      component: () => import("./components/DocumentCreate"),
+      props: true
     }]
 });
