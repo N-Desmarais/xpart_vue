@@ -90,37 +90,38 @@
 								</sui-form-field>
 								<sui-form-field>
 									<label>Ready Date</label>
-									<input type="date" v-model="data['Ready_Date']" />
+									<input :disabled="locked" type="date" v-model="data['Ready_Date']" />
 								</sui-form-field>
 							</sui-form-fields>
 							<sui-form-fields>
 								<sui-form-field>
 									<label>Checker</label>
-									<sui-dropdown selection :options="users" v-model="data['Checker']" />
+									<sui-dropdown :disabled="locked" selection :options="users" v-model="data['Checker']" />
 								</sui-form-field>
 								<sui-form-field>
 									<label>Checked Date</label>
-									<input type="date" v-model="data['Checked_Date']" />
+									<input :disabled="locked" type="date" v-model="data['Checked_Date']" />
 								</sui-form-field>
 							</sui-form-fields>
 							<sui-form-fields>
 								<sui-form-field>
 									<label>Approver</label>
-									<sui-dropdown selection :options="users" v-model="data['Approver']" />
+									<sui-dropdown :disabled="locked" selection :options="users" v-model="data['Approver']" />
 								</sui-form-field>
 								<sui-form-field>
 									<label>Approved Date</label>
-									<input type="date" v-model="data['Approved_Date']" />
+									<input :disabled="locked" type="date" v-model="data['Approved_Date']" />
 								</sui-form-field>
 								<sui-form-field>
 									<label>Released Date</label>
-									<input type="date" v-model="data['Released_Date']" />
+									<input :disabled="locked" type="date" v-model="data['Released_Date']" />
 								</sui-form-field>
 							</sui-form-fields>
 							<sui-form-fields>
 								<sui-form-field>
 									<label>Description *</label>
 									<textarea
+										:disabled="locked"
 										name="Text1"
 										cols="40"
 										rows="5"
@@ -131,6 +132,7 @@
 								<sui-form-field>
 									<label>Revision Reason</label>
 									<textarea
+										:disabled="locked"
 										name="Text1"
 										cols="40"
 										rows="5"
@@ -140,12 +142,14 @@
 							</sui-form-fields>
 							<center>
 								<sui-button
+									:disabled="locked"
 									color="green"
 									content="Save Edit"
 									style="margin: 0em .5em 0em"
 									@click="editDoc"
 								/>
 								<sui-button
+									:disabled="locked"
 									color="blue"
 									content="New Rev"
 									style="margin: 0em .5em 0em"
@@ -173,7 +177,7 @@ import DocumentDataService from "../services/document.service";
 import ProjectDataService from "../services/project.service";
 
 export default {
-	name: "DocumentCreate",
+	name: "DocumentEdit",
 	props: ["DocID", 'PartNum'],
 	data() {
 		return {
@@ -187,6 +191,7 @@ export default {
 			revisions: [],
 			selectedDoc: null,
 			id: null,
+			locked: false,
 			data: {
 				Project: null,
 				Doc_Class: null,
@@ -330,25 +335,52 @@ export default {
 			for(const [key, value] of Object.entries(this.revisions[index].data)) {
 				this.data[key] = value;
 			}
+			if(this.revisions[index].data['Released_Date'] != null) this.locked = true;
+			else this.locked = false;
 		},
 		getLatestRevs() {
-			//var eng_rev;
-			//var prod_rev;
+			// This is a real mess huh, in the words of my favorite valve programmer: Too Bad!
 			var arr = [];
+			var revs = {eng_rev: null, prod_rev: null};
 
+			// Getting sorted array of revisions
 			for(const value of Object.values(this.revisions)) {
 				var a = value.data.Revision;
 				arr.push(a);
 			}
-			// Assuming that highest numerical rev is 1 index before 'A' & that
-			// the highest alphabetical rev is the last index after sort
-
 			arr.sort();
-			console.log(arr);
 
+			// Getting latest revisions from sorted array
+			if(arr.indexOf('A') == -1) revs.prod_rev = arr[arr.length - 1];
+			else if (arr.indexOf('0') == -1) revs.eng_rev = arr[arr.length - 1];
+			else {
+				revs.prod_rev = arr[arr.indexOf('A') - 1];
+				revs.eng_rev =  revs.eng_rev = arr[arr.length - 1];
+			}
+
+			// Incrementing characters by one
+			if(revs.eng_rev)
+				revs.eng_rev = revs.eng_rev.substring(0, revs.eng_rev.length - 1)
+				+ String.fromCharCode(revs.eng_rev.charCodeAt(revs.eng_rev.length - 1) + 1);
+			else revs.eng_rev = 'A';
+			if(revs.prod_rev)
+				revs.prod_rev = revs.prod_rev.substring(0, revs.prod_rev.length - 1)
+				+ String.fromCharCode(revs.prod_rev.charCodeAt(revs.prod_rev.length - 1) + 1);
+			else revs.prod_rev = '0';
+
+			return revs;
 		},
 		newRevision() {
-			this.getLatestRevs();
+			var revinfo = {};
+			var revs = this.getLatestRevs();
+
+			revinfo['project'] = this.data.Project;
+			revinfo['class'] = this.data.Doc_Class;
+			revinfo['part_num'] = this.data.Part_Num;
+			revinfo['eng_rev'] = revs.eng_rev;
+			revinfo['prod_rev'] = revs.prod_rev;
+
+			this.$router.push({name: 'DocumentCreate', params: {revision_info: revinfo} })
 		}
 	},
 	mounted() {

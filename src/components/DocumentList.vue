@@ -7,7 +7,7 @@
 				<sui-table-row>
 					<!-- Top Menu -->
 					<sui-table-header-cell colspan="14">
-						<sui-menu style="width: min-content;">
+						<sui-menu style="width: max-content;">
 							<router-link to="/document_create">
 								<a is="sui-menu-item" icon>
 									<sui-icon name="plus" />
@@ -18,6 +18,9 @@
 							</a>
 							<a is="sui-menu-item" icon @click="deleteDoc(selectedRow)">
 								<sui-icon name="trash" />
+							</a>
+							<a is="sui-menu-item" icon @click="search()">
+								<sui-icon name="search" />
 							</a>
 						</sui-menu>
 					</sui-table-header-cell>
@@ -45,7 +48,7 @@
 			</sui-table-header>
 			<!-- Body -->
 			<sui-table-body>
-				<sui-table-row v-for="(doc, index) in docsInfo" :key="index" @click="selectedRow = index; $forceUpdate();" :selected="isSelected(index)" @dblclick="editDoc(index)">
+				<sui-table-row v-for="(doc, index) in docsInfo[selectedPage]" :key="index" @click="selectedRow = index; $forceUpdate();" :selected="isSelected(index)" @dblclick="editDoc(index)">
 					<sui-table-cell v-for="(item, key) in doc" :key="key">
 						{{ item }}
 					</sui-table-cell>
@@ -56,14 +59,11 @@
 				<sui-table-row>
 					<sui-table-header-cell colspan="14">
 						<sui-menu pagination>
-							<a is="sui-menu-item" icon>
+							<a is="sui-menu-item" icon @click="pageLeft">
 								<sui-icon name="left chevron" />
 							</a>
-							<a is="sui-menu-item">1</a>
-							<a is="sui-menu-item">2</a>
-							<a is="sui-menu-item">3</a>
-							<a is="sui-menu-item">4</a>
-							<a is="sui-menu-item" icon>
+							<a is="sui-menu-item" v-for="(page, index) in docsInfo" :key="index" @click="selectedPage=index" :active="isActive(index)">{{index+1}}</a>
+							<a is="sui-menu-item" icon @click="pageRight">
 								<sui-icon name="right chevron" />
 							</a>
 						</sui-menu>
@@ -100,7 +100,9 @@ export default {
 			docs: [],
 			docsInfo: [],
 			nextPart: 0,
-      selectedRow: null
+      selectedRow: null,
+			selectedPage: 0,
+			pageItems: 10,
 		};
 	},
 	methods: {
@@ -115,7 +117,7 @@ export default {
 					this.docs.sort(
 						function(a, b) {
 							if(a.part_num == b.part_num) {
-								return a.revision - b.revision
+								return a.revision > b.revision
 							}
 							return a.part_num > b.part_num ? 1 : -1;
 						});
@@ -126,6 +128,9 @@ export default {
 				});
 		},
 		getDocInfo(data) {
+			this.docsInfo = [];
+			var infoPage = [];
+			var index = 0;
 			for (const doc of data) {
 				var ob = {
 					Project: doc.Project.name,
@@ -146,8 +151,19 @@ export default {
 				if (doc.Checker) ob["Checker"] = doc.Checker.name;
 				if (doc.Approver) ob["Approver"] = doc.Approver.name;
 				if (doc.Requestor) ob["Requestor"] = doc.Requestor.name;
-				this.docsInfo.push(ob);
+
+				// Pagination
+				if(index < this.pageItems) {
+					infoPage.push(ob);
+					index++;
+				} else {
+					this.docsInfo.push(infoPage);
+					infoPage = [];
+					infoPage.push(ob);
+					index = 0;
+				}
 			}
+			this.docsInfo.push(infoPage);
 		},
     isSelected(index) {
       return this.selectedRow == index;
@@ -169,7 +185,19 @@ export default {
 					console.error(e);
 				});
 			}
-    }
+    },
+		pageLeft() {
+			if(this.selectedPage > 0) this.selectedPage--;
+		},
+		pageRight() {
+			if(this.selectedPage < this.docsInfo.length-1) this.selectedPage++;
+		},
+		isActive(index) {
+			return index == this.selectedPage;
+		},
+		search() {
+			console.log('a');
+		}
 	},
 	mounted() {
 		try {

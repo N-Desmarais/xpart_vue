@@ -7,24 +7,27 @@
           <center>
           <div id="Title">XPart Login<br></div>
           <sui-icon color="blue" size="massive" name="user circle"/>
-          </center>
-          <sui-form>
-            <sui-form-field>
-              <label>Email</label>
-              <input placeholder="Email Address"/>
-            </sui-form-field>
-            <sui-form-field>
-              <label>Password</label>
-              <input placeholder="Password" type="password"/>
-            </sui-form-field>
-            <center>
-            <sui-button :basic="true" color="blue" content="Login"/><br>
-          </center>
-          <a style="text-align: left;">Forgot Password</a>
-          <span style="float:right;">
-            <a>Register</a>
-          </span>
+          <div v-if="$auth.isAuthenticated" style="margin: 1em 0em .5em;">
+            Logged In As: {{$auth.user.name}}
+          </div>
+          <sui-form style="margin: 1em 0em .5em;">
+              <sui-button
+                v-if="!$auth.isAuthenticated"
+                color="green"
+                content="Login"
+                style="margin: 0em .5em 0em"
+                @click="login"
+              />
+              <sui-button
+                v-if="$auth.isAuthenticated"
+                color="red"
+                content="Logout"
+                style="margin: 0em .5em 0em"
+                @click="logout"
+              />
+
           </sui-form>
+          </center>
           </sui-segment>
         </sui-grid-column>
     </sui-grid>
@@ -34,7 +37,17 @@
 
 <script>
 export default {
-  name: 'Login'
+  name: 'Login',
+  methods: {
+    login() {
+      this.$auth.loginWithRedirect();
+    },
+    logout() {
+      this.$auth.logout({
+        returnTo: window.location.origin
+      });
+    }
+  }
 }
 </script>
 

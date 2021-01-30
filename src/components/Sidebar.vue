@@ -10,6 +10,12 @@
        inverted
        vertical
      >
+       <router-link to="/login">
+       <sui-menu-item>
+           <sui-icon name="lock" />
+            Login
+       </sui-menu-item>
+       </router-link>
        <router-link to="/account">
          <sui-menu-item to="/">
            <sui-icon name="home" />
@@ -20,36 +26,6 @@
        <sui-menu-item>
            <sui-icon name="file outline" />
             Master List
-       </sui-menu-item>
-       </router-link>
-       <router-link to="/document_edit">
-       <sui-menu-item>
-           <sui-icon name="file outline" />
-            Document Edit
-       </sui-menu-item>
-       </router-link>
-       <router-link to="/login">
-       <sui-menu-item>
-           <sui-icon name="file alternate" />
-            Login
-       </sui-menu-item>
-       </router-link>
-       <router-link to="/signup">
-       <sui-menu-item>
-           <sui-icon name="file alternate" />
-            SignUp
-       </sui-menu-item>
-       </router-link>
-       <router-link to="/forgot">
-       <sui-menu-item>
-           <sui-icon name="file alternate" />
-            ForgotPassword
-       </sui-menu-item>
-       </router-link>
-       <router-link to="/reset">
-       <sui-menu-item>
-           <sui-icon name="file alternate" />
-            PasswordReset
        </sui-menu-item>
        </router-link>
        <router-link to="/project/testproj">
@@ -72,6 +48,8 @@
 <script>
 
 export default {
+
+
   name: 'sidebar',
   data() { return {} },
   props: ['toggle'],

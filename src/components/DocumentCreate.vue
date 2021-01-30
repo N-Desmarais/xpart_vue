@@ -13,6 +13,7 @@
 								<sui-form-field>
 									<label>Project *</label>
 									<sui-dropdown
+										:disabled="lock_rev_fields"
 										selection
 										:options="projects"
 										v-model="data['Project']"
@@ -23,6 +24,7 @@
 								<sui-form-field>
 									<label>Class *</label>
 									<sui-dropdown
+										:disabled="lock_rev_fields"
 										selection
 										:options="classes"
 										v-model="data['Doc_Class']"
@@ -175,13 +177,13 @@ const moment = require("moment");
 
 export default {
 	name: "DocumentCreate",
-	props: ["project", "doc_class", "engineering_rev", "production_rev"],
+	props: ["revision_info"],
 	data() {
 		return {
+			lock_rev_fields: false,
 			radio_value: "1",
-			eng_rev: this.engineering_rev,
-			prod_rev: this.production_rev,
-			nextPart: null,
+			eng_rev: null,
+			prod_rev: null,
 			users: [],
 			classes: [],
 			projects: [],
@@ -296,14 +298,23 @@ export default {
 			)
 				this.submittable = true;
 			else this.submittable = false;
+		},
+		getRevisionInfo() {
+			this.lock_rev_fields = true;
+			this.data.Project = this.revision_info.project;
+			this.data.Doc_Class = this.revision_info.class;
+			this.data.Part_Num = this.revision_info.part_num;
+			this.eng_rev = this.revision_info.eng_rev;
+			this.prod_rev = this.revision_info.prod_rev;
 		}
 	},
 	mounted() {
 		try {
+			if(this.revision_info) this.getRevisionInfo();
+			else this.getNextPartNum();
 			this.retrieveUsers();
 			this.retrieveClasses();
 			this.retrieveProjects();
-			this.getNextPartNum();
 			this.updateRevision();
 			this.getDate();
 		} catch (err) {

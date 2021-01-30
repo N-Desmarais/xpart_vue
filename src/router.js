@@ -1,9 +1,12 @@
 import Vue from "vue";
 import Router from "vue-router";
+import { authGuard } from "./auth/authGuard";
 
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
+  base: process.env.BASE_URL,
   routes: [
     {
       path: "/",
@@ -12,45 +15,35 @@ export default new Router({
       component: () => import("./components/Login")
     },
     {
-      path: "/signup",
-      name: "Signup",
-      component: () => import("./components/SignUp")
-    },
-    {
-      path: "/forgot",
-      name: "ForgotPassword",
-      component: () => import("./components/ForgotPassword")
-    },
-    {
-      path: "/reset",
-      name: "PasswordReset",
-      component: () => import("./components/PasswordReset")
-    },
-    {
       path: "/account",
       name: "Account",
-      component: () => import("./components/Account")
+      component: () => import("./components/Account"),
+      beforeEnter: authGuard
     },
     {
       path: "/project/:name",
       name: "Project",
-      component: () => import("./components/DocumentList")
+      component: () => import("./components/DocumentList"),
+      beforeEnter: authGuard
     },
     {
       path: "/documents",
       name: "Documents",
-      component: () => import("./components/DocumentList")
+      component: () => import("./components/DocumentList"),
+      beforeEnter: authGuard
     },
     {
       path: "/document_edit",
       name: "DocumentEdit",
       component: () => import("./components/DocumentEdit"),
-      props: true
+      props: true,
+      beforeEnter: authGuard
     },
     {
       path: "/document_create",
       name: "DocumentCreate",
       component: () => import("./components/DocumentCreate"),
-      props: true
+      props: true,
+      beforeEnter: authGuard
     }]
 });
