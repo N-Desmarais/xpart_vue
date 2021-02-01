@@ -7,8 +7,12 @@
           <center>
           <div id="Title">XPart Login<br></div>
           <sui-icon color="blue" size="massive" name="user circle"/>
+          <div v-if="!$auth.isAuthenticated" style="margin: 1em 0em .5em;">
+            Make sure you verify your email before logging in.
+          </div>
           <div v-if="$auth.isAuthenticated" style="margin: 1em 0em .5em;">
-            Logged In As: {{$auth.user.name}}
+            Logged In As: {{$auth.user.email}} <br><br>
+            Hover your mouse in the top left corner to see the menu
           </div>
           <sui-form style="margin: 1em 0em .5em;">
               <sui-button
@@ -36,6 +40,8 @@
 </template>
 
 <script>
+import UserDataService from "../services/user.service";
+
 export default {
   name: 'Login',
   methods: {
@@ -46,6 +52,31 @@ export default {
       this.$auth.logout({
         returnTo: window.location.origin
       });
+    },
+    userCheck() {
+      var email = this.$auth.user.email;
+      console.log(email);
+      UserDataService.get(email)
+				.then(response => {
+          if(!response.data) {
+            UserDataService.create({
+              name: this.$auth.user.email.substring(0, 3),
+              email: this.$auth.user.email,
+            }).then(response2 => {
+              console.log(response2);
+            });
+          } else {
+            console.log(response);
+          }
+				})
+				.catch(e => {
+					console.error(e);
+				});
+    }
+  },
+  watch: {
+    '$auth.isAuthenticated': function() {
+      if(this.$auth.isAuthenticated) this.userCheck();
     }
   }
 }

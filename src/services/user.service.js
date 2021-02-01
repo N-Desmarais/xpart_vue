@@ -5,8 +5,8 @@ class UserDataService {
     return http.get("/users");
   }
 
-  get(id) {
-    return http.get(`/users/${id}`);
+  get(email) {
+    return http.get("/users", email);
   }
 
   create(data) {
