@@ -1,5 +1,5 @@
 <template>
-	<div id="SignUp" @submit.prevent>
+	<div id="DocumentCreate" @submit.prevent>
 		<sui-container centered>
 			<sui-grid middle aligned :padded="true" id="Grid">
 				<sui-grid-column :centered="true" style="width: 600px;">
@@ -240,7 +240,7 @@ export default {
 				.then(response => {
 					for (const project of response.data) {
 						this.projects.push({
-							text: project.name,
+							text: project.code + " - " + project.name,
 							value: project.project_id
 						});
 					}

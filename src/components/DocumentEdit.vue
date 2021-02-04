@@ -246,7 +246,7 @@ export default {
 				.then(response => {
 					for (const project of response.data) {
 						this.projects.push({
-							text: project.name,
+							text: project.code + " - " + project.name,
 							value: project.project_id
 						});
 					}
@@ -256,7 +256,7 @@ export default {
 				});
 		},
 		retrieveDocuments() {
-			var query = `?part_num=${this.PartNum}`
+			var query = `?part_num=${this.PartNum}`;
 			DocumentDataService.getAll(query)
 				.then(response => {
 					this.collectInfo(response.data);

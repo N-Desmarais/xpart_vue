@@ -9,6 +9,7 @@
 
 <script>
 import sidebar from './components/Sidebar.vue'
+import UserDataService from "./services/user.service";
 
 export default {
   name: 'App',
@@ -24,6 +25,27 @@ export default {
         this.Toggled = true;
       } else {
         this.Toggled = false;
+      }
+    },
+    userCheck(input) {
+      UserDataService.get(input)
+				.then(response => {
+          if(response.data.length == 0) {
+            UserDataService.create({
+              name: this.$auth.user.email.substring(0, 3),
+              email: this.$auth.user.email,
+            });
+          }
+				})
+				.catch(e => {
+					console.error(e);
+				});
+    }
+  },
+  watch: {
+    '$auth.user.email': function() {
+      if(this.$auth.isAuthenticated){
+        this.userCheck(this.$auth.user.email);
       }
     }
   }
