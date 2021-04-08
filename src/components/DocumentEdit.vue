@@ -134,7 +134,7 @@
 									<textarea
 										:disabled="locked"
 										name="Text1"
-										@input0"
+										cols="40"
 										rows="5"
 										v-model="data['Revision_Reason']"
 									/>
