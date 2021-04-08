@@ -1,7 +1,7 @@
 <template>
 	<div class="data table" v-on:keyup.enter="search()">
 		<h1><center>Master Document List</center></h1>
-		<sui-table selectable celled @selectionChanged="selectedRows = $event">
+		<sui-table celled>
 			<sui-table-header>
 				<sui-table-row>
 					<!-- Top Menu -->
@@ -15,7 +15,7 @@
 							<a is="sui-menu-item" icon @click="editDoc(selectedRow)">
 								<sui-icon name="pencil" />
 							</a>
-							<a is="sui-menu-item" icon @click="deleteDoc(selectedRows)">
+							<a is="sui-menu-item" icon @click="deleteDoc(selectedRow)">
 								<sui-icon name="trash" />
 							</a>
 							<a is="sui-menu-item" icon @click="search()">
@@ -215,8 +215,7 @@ export default {
 				DocumentDataService.delete(this.docs[index].doc_id)
 					.then(response => {
 						if (response.status == 200) {
-							this.docs.splice(index, 1);
-							this.docsInfo.splice(index, 1);
+							this.retrieveDocuments();
 						}
 					})
 					.catch(e => {
@@ -245,6 +244,9 @@ export default {
 	mounted() {
 		try {
 			this.retrieveDocuments();
+			window.setInterval(() => {
+				this.retrieveDocuments()
+			}, 10000)
 		} catch (err) {
 			console.error("Error response:");
 			console.error(err);
