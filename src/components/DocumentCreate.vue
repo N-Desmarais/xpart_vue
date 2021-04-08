@@ -18,7 +18,7 @@
 										:options="projects"
 										v-model="data['Project']"
 										color="red"
-										@change="CheckRequired"
+										@input="CheckRequired"
 									/>
 								</sui-form-field>
 								<sui-form-field>
@@ -28,7 +28,7 @@
 										selection
 										:options="classes"
 										v-model="data['Doc_Class']"
-										@change="CheckRequired"
+										@input="CheckRequired"
 									/>
 								</sui-form-field>
 								<sui-form-field>
@@ -43,7 +43,7 @@
 										disabled
 										v-model="data.Revision"
 										style="width: 195px;"
-										@change="CheckRequired"
+										@input="CheckRequired"
 									/>
 								</sui-form-field>
 								<sui-form-fields grouped style="margin: 0em .5em 0em">
@@ -55,6 +55,7 @@
 											value="1"
 											v-model="radio_value"
 											@click="updateRevision"
+											@input="CheckRequired"
 										/>
 									</sui-form-field>
 									<sui-form-field>
@@ -64,6 +65,7 @@
 											value="2"
 											v-model="radio_value"
 											@click="updateRevision"
+											@input="CheckRequired"
 										/>
 									</sui-form-field>
 								</sui-form-fields>
@@ -75,7 +77,7 @@
 										selection
 										:options="users"
 										v-model="data['Requestor']"
-										@change="CheckRequired"
+										@input="CheckRequired"
 									/>
 								</sui-form-field>
 								<sui-form-field>
@@ -289,12 +291,12 @@ export default {
 		},
 		CheckRequired() {
 			if (
-				this.data.Project &&
-				this.data.Doc_Class &&
-				this.data.Part_Num &&
-				this.data.Revision &&
-				this.data.Requestor &&
-				this.data.Description
+				this.data.Project != null &&
+				this.data.Doc_Class != null &&
+				this.data.Part_Num != null &&
+				this.data.Requestor != null &&
+				this.data.Revision != null &&
+				this.data.Description != null
 			)
 				this.submittable = true;
 			else this.submittable = false;

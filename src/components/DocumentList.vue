@@ -15,11 +15,14 @@
 							<a is="sui-menu-item" icon @click="editDoc(selectedRow)">
 								<sui-icon name="pencil" />
 							</a>
-							<a is="sui-menu-item" icon @click="deleteDoc(selectedRow)">
+							<a is="sui-menu-item" icon @click="deleteDoc(selectedRows)">
 								<sui-icon name="trash" />
 							</a>
 							<a is="sui-menu-item" icon @click="search()">
 								<sui-icon name="search" />
+							</a>
+							<a is="sui-menu-item" icon @click="retrieveDocuments()">
+								<sui-icon name="redo" />
 							</a>
 						</sui-menu>
 					</sui-table-header-cell>
@@ -161,7 +164,6 @@ export default {
 			var infoPage = [];
 			var index = 0;
 			for (const doc of data) {
-				console.log(doc);
 				var ob = {
 					Project: doc.Project.code + " - " + doc.Project.name,
 					Class: doc.Document_Class.code,

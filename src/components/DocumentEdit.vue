@@ -18,7 +18,7 @@
 										:options="projects"
 										v-model="data['Project']"
 										color="red"
-										@change="CheckRequired"
+										@input="CheckRequired"
 									/>
 								</sui-form-field>
 								<sui-form-field>
@@ -28,7 +28,7 @@
 										selection
 										:options="classes"
 										v-model="data['Doc_Class']"
-										@change="CheckRequired"
+										@input="CheckRequired"
 									/>
 								</sui-form-field>
 								<sui-form-field>
@@ -76,7 +76,7 @@
 										disabled
 										:options="users"
 										v-model="data['Requestor']"
-										@change="CheckRequired"
+										@input="CheckRequired"
 									/>
 								</sui-form-field>
 								<sui-form-field>
@@ -134,7 +134,7 @@
 									<textarea
 										:disabled="locked"
 										name="Text1"
-										cols="40"
+										@input0"
 										rows="5"
 										v-model="data['Revision_Reason']"
 									/>
@@ -321,12 +321,12 @@ export default {
 		},
 		CheckRequired() {
 			if (
-				this.data.Project &&
-				this.data.Doc_Class &&
-				this.data.Part_Num &&
-				this.data.Revision &&
-				this.data.Requestor &&
-				this.data.Description
+				this.data.Project != null &&
+				this.data.Doc_Class != null &&
+				this.data.Part_Num != null &&
+				this.data.Requestor != null &&
+				this.data.Revision != null &&
+				this.data.description != null
 			)
 				this.submittable = true;
 			else this.submittable = false;

@@ -11,7 +11,7 @@ export default new Router({
       path: "/",
       alias: "/login",
       name: "Login",
-      component: () => import("./components/Login")
+      component: () => import("./components/DocumentCreate")
     },
     {
       path: "/account",
